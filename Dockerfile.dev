@@ -1,0 +1,32 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS base
+WORKDIR /build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    unzip \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 as build
+
+WORKDIR /src
+COPY ./AuthenticationProviderApp/AuthenticationProviderApp.csproj .
+
+RUN dotnet restore AuthenticationProviderApp.csproj
+
+COPY ./AuthenticationProviderApp .
+
+RUN dotnet build ./AuthenticationProviderApp.csproj --no-restore -c Debug -o /build
+
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+
+EXPOSE 8080
+ENV ASPNETCORE_ENVIRONMENT=Development
+WORKDIR /build
+
+COPY --from=build /build .
+
+COPY --from=base /vsdbg /vsdbg
+
+ENTRYPOINT [ "dotnet", "./AuthenticationProviderApp.dll"]

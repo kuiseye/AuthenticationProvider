@@ -1,0 +1,32 @@
+services:
+  authentication_provider:
+    ports:
+      - "${PORT}:${AUTHENTICATION_PORT}"
+    build: 
+      dockerfile: ./Dockerfile.dev
+    networks:
+      - authentication_network
+    env_file:
+      - .env.dev
+    depends_on:
+      - postgres
+  #############################################
+  postgres:
+    image: "postgres:17-alpine"
+    expose:
+      - ${POSTGRES_PORT}
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    networks:
+      - authentication_network
+    env_file:
+      - .env.dev
+
+
+volumes:
+  postgres-volume:
+    external: false
+
+networks:
+  authentication_network:
+    driver: bridge
