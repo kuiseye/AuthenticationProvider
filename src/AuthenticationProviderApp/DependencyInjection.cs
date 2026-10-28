@@ -87,24 +87,6 @@ public static class DependencyInjection
         services.AddSwaggerGen();
         return services;
     }
-    //Application
-    public static async Task ApplyMigrationsAsync(this IServiceProvider serviceProvider)
-    {
-        using (var scope = serviceProvider.CreateScope())
-        {
-            try{
-                var DbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await DbContext.Database.MigrateAsync();
-            }
-            catch(Exception e)
-            {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                Log.MigrationsFailed(logger, e);
-
-                throw;
-            }
-        }
-    }
 
     public static void MapSwaggerEndpoints(this WebApplication app)
     {

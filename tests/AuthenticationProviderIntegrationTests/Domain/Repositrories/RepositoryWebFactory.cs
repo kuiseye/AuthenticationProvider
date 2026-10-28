@@ -24,6 +24,7 @@ public class RepositoryWebFactory : WebApplicationFactory<Program>, IAsyncLifeti
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseContentRoot(AppContext.BaseDirectory);
         builder.ConfigureTestServices(services =>
         {
            var descriptor = services.SingleOrDefault(s => s.ServiceType==typeof(DbContextOptions<ApplicationDbContext>));
@@ -44,6 +45,10 @@ public class RepositoryWebFactory : WebApplicationFactory<Program>, IAsyncLifeti
     public async Task InitializeAsync()
     {
         await postgresContainer.StartAsync();
+        
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await db.Database.MigrateAsync();
     }
 
     async Task IAsyncLifetime.DisposeAsync()

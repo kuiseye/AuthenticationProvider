@@ -42,8 +42,6 @@ builder.Services.AddScoped<ITokenService,TokenService>();
 
 var app = builder.Build();
 app.UseExceptionHandler();
-//DB
-await app.Services.ApplyMigrationsAsync();
 //Dev
 if (app.Environment.IsDevelopment())
 {

@@ -15,6 +15,7 @@ public class ControllerWebFactory : WebApplicationFactory<Program>
     public FakeTimeProvider FakeTimeProvider {get;} = new FakeTimeProvider(DateTimeOffset.Now);
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseContentRoot(AppContext.BaseDirectory);
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<TimeProvider>();
