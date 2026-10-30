@@ -13,10 +13,13 @@
         },
         {
             "name": "C#: AuthenticationProvider Debug",
-            "type": "dotnet",
+            "type": "coreclr",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/src/AuthenticationProviderApp/AuthenticationProviderApp.csproj",
-            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "dotnet: build app",
+            "program": "${workspaceFolder}/src/AuthenticationProviderApp/bin/Debug/net10.0/AuthenticationProviderApp.dll",
+            "cwd": "${workspaceFolder}/src/AuthenticationProviderApp",
+            "envFile": "${workspaceFolder}/.env.dev",
+            "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "name": "Containers .NET Attach (Preview)",
@@ -34,6 +37,7 @@
             "sourceFileMap": {
                 "/src": "${workspaceFolder}/AuthenticationProviderApp"
             },     
+            
             "internalConsoleOptions": "openOnSessionStart",
             "justMyCode": false,
             "logging": {
