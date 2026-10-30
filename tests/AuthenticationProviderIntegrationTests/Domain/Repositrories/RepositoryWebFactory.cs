@@ -24,6 +24,8 @@ public class RepositoryWebFactory : WebApplicationFactory<Program>, IAsyncLifeti
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseSetting("TokenKeyPairSettings:SigningKey", "test-signing-key");
+        builder.UseSetting("TokenKeyPairSettings:VerificationKey", "test-verification-key");
         builder.UseContentRoot(AppContext.BaseDirectory);
         builder.ConfigureTestServices(services =>
         {

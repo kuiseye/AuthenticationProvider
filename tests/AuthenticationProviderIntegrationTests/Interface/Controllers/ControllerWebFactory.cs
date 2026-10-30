@@ -15,6 +15,9 @@ public class ControllerWebFactory : WebApplicationFactory<Program>
     public FakeTimeProvider FakeTimeProvider {get;} = new FakeTimeProvider(DateTimeOffset.Now);
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+         builder.UseSetting("TokenKeyPairSettings:SigningKey", "test-signing-key");
+         builder.UseSetting("TokenKeyPairSettings:VerificationKey", "test-verification-key");
+         builder.UseSetting("ConnectionString:Default", "test-connection-string");
         builder.UseContentRoot(AppContext.BaseDirectory);
         builder.ConfigureTestServices(services =>
         {
