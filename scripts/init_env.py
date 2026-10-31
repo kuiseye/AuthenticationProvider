@@ -1,5 +1,6 @@
 from inv_env_parser import args
 from dotenv import dotenv_values
+import dotenv.main
 import os
 import sys
 
@@ -20,12 +21,14 @@ signingKey = args.signing_key if args.signing_key != None else loadKeyFromFile(a
 verificationKey = args.verification_key if args.verification_key != None else loadKeyFromFile(args.verification_key_file)
 
 
-values = dotenv_values(args.template)
+values = dotenv_values(args.template, interpolate=False)
 
 values[DB_USER_ENV_NAME]=dbUser
 values[DB_PASSWOR_ENV_NAME]=dbPassword
 values[SIGNING_KEY_ENV_NAME]=signingKey
 values[VERIFICATION_KEY_ENV_NAME]=verificationKey
+
+values = dict(dotenv.main.resolve_variables(values.items(),True))
 
 if os.path.exists(args.output) and not args.force:
     print(f"{args.output} already exists (use --force to overwrite)", file=sys.stderr)
