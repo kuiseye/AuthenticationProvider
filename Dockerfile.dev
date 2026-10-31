@@ -10,11 +10,11 @@ RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
 FROM mcr.microsoft.com/dotnet/sdk:10.0 as build
 
 WORKDIR /src
-COPY ./AuthenticationProviderApp/AuthenticationProviderApp.csproj .
+COPY ./src/AuthenticationProviderApp/AuthenticationProviderApp.csproj .
 
 RUN dotnet restore AuthenticationProviderApp.csproj
 
-COPY ./AuthenticationProviderApp .
+COPY ./src/AuthenticationProviderApp .
 
 RUN dotnet build ./AuthenticationProviderApp.csproj --no-restore -c Debug -o /build
 
