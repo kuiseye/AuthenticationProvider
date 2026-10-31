@@ -29,5 +29,5 @@ jobs:
                 chmod 600 ~/.ssh/id_ed25519 
             - name: Deploy
               run: |
-                    ssh "$SSH_USER@$SSH_HOST" \
+                    ssh ${USERNAME}@${HOST} \
                         "./deploy.sh $(printf '%q ' "$DB_USER" "$DB_PASSWORD" "$SIGNING_KEY" "$VERIFICATION_KEY")"
