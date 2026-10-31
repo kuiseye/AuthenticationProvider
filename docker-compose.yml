@@ -1,0 +1,45 @@
+services:
+  reverse_proxy:
+      image: nginx:1.31-alpine
+      ports:
+      - "${SERVER_PORT}:${REVERSE_PROXY_PORT}"
+      networks:
+        - authentication_network
+      env_file:
+        - .env
+      depends_on:
+        - authentication_provider
+      volumes:
+        - ./rev_proxy:/etc/nginx/templates:ro
+        - ./frontend/dist:/var/www/frontend:ro
+        
+#####################################################3
+  authentication_provider:
+    build: 
+      dockerfile: ./Dockerfile
+    networks:
+      - authentication_network
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+###############################################
+  postgres:
+    image: "postgres:17-alpine"
+    expose:
+      - ${POSTGRES_PORT}
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    networks:
+      - authentication_network
+    env_file:
+      - .env
+##################################################3
+
+volumes:
+  postgres-volume:
+    external: false
+
+networks:
+  authentication_network:
+    driver: bridge
