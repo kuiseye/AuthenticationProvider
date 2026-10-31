@@ -20,7 +20,7 @@ signingKey = args.signing_key if args.signing_key != None else loadKeyFromFile(a
 verificationKey = args.verification_key if args.verification_key != None else loadKeyFromFile(args.verification_key_file)
 
 
-values = dotenv_values('.env.template')
+values = dotenv_values(args.template)
 
 values[DB_USER_ENV_NAME]=dbUser
 values[DB_PASSWOR_ENV_NAME]=dbPassword
