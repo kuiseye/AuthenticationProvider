@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "npm run dev",
+            "name": "Run npm dev",
+            "request": "launch",
+            "type": "node-terminal",
+            "cwd": "${workspaceFolder}/frontend"
+        },
+        {
+            "name": "C#: AuthenticationProvider Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build app",
+            "program": "${workspaceFolder}/src/AuthenticationProviderApp/bin/Debug/net10.0/AuthenticationProviderApp.dll",
+            "cwd": "${workspaceFolder}/src/AuthenticationProviderApp",
+            "envFile": "${workspaceFolder}/.env",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Containers .NET Attach (Preview)",
+            "type": "coreclr",
+            "request": "attach",
+
+            "processId": "${command:pickRemoteProcess}",
+            "pipeTransport": {
+                "pipeCwd": "${workspaceRoot}",
+                "pipeProgram": "podman",
+                "pipeArgs": [ "exec", "-i", "authenticationprovider-authentication_provider-1" ],
+                "debuggerPath": "/vsdbg/vsdbg",
+                "quoteArgs": false
+            },
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}/src/AuthenticationProviderApp"
+            },     
+            
+            "internalConsoleOptions": "openOnSessionStart",
+            "justMyCode": false,
+            "logging": {
+                "moduleLoad": true,
+                "diagnosticsLog": { "protocolMessages": true }
+            }
+        }
+    ]
+}

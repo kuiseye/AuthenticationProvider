@@ -1,0 +1,6 @@
+**/obj
+**/bin
+**/.vscode
+**/.env
+**/.env.dev
+**/temp
