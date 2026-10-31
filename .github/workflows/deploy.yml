@@ -8,6 +8,16 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-24.04
+        env:
+            KNOWN_HOSTS: ${{secrets.KNOWN_HOSTS}}
+            SSH_KEY: ${{secrets.SSH_KEY}}
+            DB_USER: ${{secrets.DB_USER}}
+            DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+            SIGNING_KEY: ${{secrets.SIGNING_KEY}}
+            VERIFICATION_KEY: ${{secrets.VERIFICATION_KEY}}
+            USERNAME: ${{secrets.USERNAME}}
+            HOST: ${{secrets.HOST}}
+
         steps:
             - name: Load repository
               uses: actions/checkout@v4
