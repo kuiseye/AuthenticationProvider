@@ -27,5 +27,7 @@ jobs:
                 printf "%s\n" "${KNOWN_HOSTS}" > ~/.ssh/known_hosts &&
                 printf "%s\n" "${SSH_KEY}" > ~/.ssh/id_ed25519 &&
                 chmod 600 ~/.ssh/id_ed25519 
-            - name: Say hi!
-              run: ssh ${USERNAME}@${HOST} './deploy.sh ${DB_USER} ${DB_PASSWORD} ${SIGNING_KEY} ${VERIFICATION_KEY}'
+            - name: Deploy
+              run: |
+                    ssh "$SSH_USER@$SSH_HOST" \
+                        "./deploy.sh $(printf '%q ' "$DB_USER" "$DB_PASSWORD" "$SIGNING_KEY" "$VERIFICATION_KEY")"
