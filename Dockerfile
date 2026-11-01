@@ -16,6 +16,6 @@ EXPOSE 8080
 ENV ASPNETCORE_ENVIRONMENT=Release
 WORKDIR /publish
 
-COPY --from=build /publish .
+COPY --from=publish /publish .
 
 ENTRYPOINT [ "dotnet", "./AuthenticationProviderApp.dll"]

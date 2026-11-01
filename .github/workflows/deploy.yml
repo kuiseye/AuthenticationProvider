@@ -6,26 +6,112 @@ on:
             main
 
 jobs:
+    build-dotnet:
+        runs-on: ubuntu-26.04
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions/setup-dotnet@v6
+              with:
+                dotnet-version: '10.0.x'
+                cache: true
+                cache-dependency-path: "**/packages.lock.json"
+            
+            - run: dotnet publish ./src/AuthenticationProviderApp/AuthenticationProviderApp.csproj -c Release -o ${{github.workspace}}/prod/app
+
+            - run: dotnet tool restore 
+
+            - run: >
+                 dotnet ef migrations bundle
+                 --project src/AuthenticationProviderApp/AuthenticationProviderApp.csproj 
+                 --configuration Release
+                 --no-build --self-contained 
+                 -r linux-musl-x64 --force -o ./prod/efbundle
+
+            - uses: actions/upload-artifact@v7
+              with:
+                name: dotnet_prod_result
+                path: ${{github.workspace}}/prod
+
+    build-frontend:
+        runs-on: ubuntu-26.04
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions/setup-node@v7
+              with:
+                node-version: 24
+                cache: npm
+                cache-dependency-path: frontend/package-lock.json
+
+            - run: npm ci --prefix ${{github.workspace}}/frontend
+
+            - run: npm run --prefix ${{github.workspace}}/frontend build -- --outDir ${{github.workspace}}/prod/dist
+
+
+            - run: >
+                mkdir ${{github.workspace}}/prod/reverse_proxy && 
+                cp ${{github.workspace}}/rev_proxy/nginx.conf.template ${{github.workspace}}/prod/reverse_proxy/
+            
+
+            - run: pip install python-dotenv
+
+            - run: >
+                python3 ${{github.workspace}}/scripts/init_env.py 
+                -u ${{secrets.DB_USER}}
+                -p ${{secrets.DB_PASSWORD}}
+                -s ${{secrets.SIGNING_KEY}}
+                -v ${{secrets.VERIFICATION_KEY}}
+                -o ${{github.workspace}}/prod/.env
+
+
+            - uses: actions/upload-artifact@v7
+              with:
+                name: frontend_prod_result
+                path: ${{github.workspace}}/prod
+                include-hidden-files: true
+
+                
     deploy:
-        runs-on: ubuntu-24.04
+        needs: 
+            - build-frontend
+            - build-dotnet
+        runs-on: ubuntu-26.04
         env:
             KNOWN_HOSTS: ${{secrets.KNOWN_HOSTS}}
             SSH_KEY: ${{secrets.SSH_KEY}}
-            DB_USER: ${{secrets.DB_USER}}
-            DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-            SIGNING_KEY: ${{secrets.SIGNING_KEY}}
-            VERIFICATION_KEY: ${{secrets.VERIFICATION_KEY}}
             USERNAME: ${{secrets.USERNAME}}
             HOST: ${{secrets.HOST}}
 
         steps:
-            - name: Load repository
-              uses: actions/checkout@v4
+            - uses: actions/download-artifact@v7
+              with:
+                name: dotnet_prod_result 
+                path: ${{github.workspace}}/prod
+
+            - uses: actions/download-artifact@v7
+              with:
+                name: frontend_prod_result
+                path: ${{github.workspace}}/prod
+
+            - name: Restore executable bit
+              run: chmod +x ${{ github.workspace }}/prod/efbundle
+
             - name: Configure keys
               run: > 
-                mkdir .ssh && 
-                printf ${KNOWN_HOSTS} > ~/.ssh/known_hosts &&
-                printf ${SSH_KEY} > ~/.ssh/id_ed25519 &&
+                mkdir -p ~/.ssh && 
+                printf "%s\n" "${KNOWN_HOSTS}" > ~/.ssh/known_hosts &&
+                printf "%s\n" "${SSH_KEY}" > ~/.ssh/id_ed25519 &&
                 chmod 600 ~/.ssh/id_ed25519 
-            - name: Say hi!
-              run: ssh ${USERNAME}@${HOST} './deploy ${DB_USER} ${DB_PASSWORD} ${SIGNING_KEY} ${VERIFICATION_KEY}'
+
+    
+            - name: Deploy
+              run: rsync -avz ${{github.workspace}}/prod ${USERNAME}@${HOST}:~
+
+            - run: |
+                ssh ${USERNAME}@${HOST} '
+                set -e
+                cd ~/prod
+                podman compose --env-file .env down --remove-orphans -t 30
+                podman compose --env-file .env up -d --build --force-recreate
+                podman compose --env-file .env ps
+                '
+              
