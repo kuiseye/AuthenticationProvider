@@ -1,3 +1,4 @@
+name: auth_app_project
 services:
   reverse_proxy:
       image: docker.io/library/nginx:1.31-alpine
