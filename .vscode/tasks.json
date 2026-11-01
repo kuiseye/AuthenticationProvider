@@ -7,7 +7,7 @@
 			"group": "build",
 			"file": "${workspaceFolder}/src/AuthenticationProviderApp/AuthenticationProviderApp.csproj",
 			"problemMatcher": [],
-			"label": "dotnet: build app"
-		}
+			"label": "dotnet app"
+		},
 	]
 }

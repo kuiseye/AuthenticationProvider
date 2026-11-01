@@ -7,6 +7,10 @@
 .env*
 !.env.template
 
+temp
+
+prod/**
+!prod/docker-compose.yml
 
 # User-specific files
 *.rsuser
