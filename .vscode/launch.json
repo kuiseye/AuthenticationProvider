@@ -12,16 +12,6 @@
             "cwd": "${workspaceFolder}/frontend"
         },
         {
-            "name": "C#: AuthenticationProvider Debug",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "dotnet app",
-            "program": "${workspaceFolder}/src/AuthenticationProviderApp/bin/Debug/net10.0/AuthenticationProviderApp.dll",
-            "cwd": "${workspaceFolder}/src/AuthenticationProviderApp",
-            "envFile": "${workspaceFolder}/.env",
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
             "name": "Containers .NET Attach (Preview)",
             "type": "coreclr",
             "request": "attach",
@@ -30,7 +20,7 @@
             "pipeTransport": {
                 "pipeCwd": "${workspaceRoot}",
                 "pipeProgram": "podman",
-                "pipeArgs": [ "exec", "-i", "authenticationprovider-authentication_provider-1" ],
+                "pipeArgs": [ "exec", "-i", "authentication_provider" ],
                 "debuggerPath": "/vsdbg/vsdbg",
                 "quoteArgs": false
             },

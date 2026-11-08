@@ -2,8 +2,7 @@ import argparse
 
 parser = argparse.ArgumentParser(".env initializer")
 
-parser.add_argument('template', nargs='?', help='input file in form of template required to run the application (.env.template by default)', default='.env.template')
-parser.add_argument('-o', '--output', help='output file in form of a .env file (.env by default)', default='.env')
+parser.add_argument('env_folder', nargs='?', help='input file in form of template required to run the application (.env.template by default)', default='./env/')
 
 parser.add_argument('-f', '--force', help="forces overwrite to OUTPUT file", action="store_true")  
 

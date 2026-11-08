@@ -1,0 +1,54 @@
+- name: Init application
+  hosts: nodes
+  vars:
+    deploy_public_key_file: ~/.ssh/id_deploy.pub
+    deploy_user: deploy
+  tasks:
+    - name: Create deploy user
+      ansible.builtin.user:
+        name: "{{ deploy_user }}"
+        uid: 1001
+        shell: /bin/bash
+        groups:
+          - sudo
+        append: true
+        create_home: true
+        state: present
+
+    - name: Add sudoer policy for deploy. NOPASSWD:ALL
+      ansible.builtin.copy:
+        dest: "/etc/sudoers.d/{{ deploy_user }}"
+        content: "{{ deploy_user }} ALL=(ALL) NOPASSWD:ALL\n"
+        owner: root
+        group: root
+        mode: "0440"
+        validate: /usr/sbin/visudo -cf %s
+      tags: [setup]
+
+      
+    - name: Add known host
+      ansible.builtin.authorized_key:
+        user: deploy
+        key: "{{ lookup('ansible.builtin.file', deploy_public_key_file) }}"
+        state: present
+    
+    # - name: Disable root login and password authentication
+    #   ansible.builtin.lineinfile:
+    #     path: /etc/ssh/sshd_config
+    #     regexp: "{{ item.regexp }}"
+    #     line: "{{ item.line }}"
+    #     validate: /usr/sbin/sshd -t -f %s
+    #   loop:
+    #     - { regexp: '^\s*#?\s*PermitRootLogin\b', line: 'PermitRootLogin no' }
+    #     - { regexp: '^\s*#?\s*PasswordAuthentication\b', line: 'PasswordAuthentication no' }
+    #   notify: Restart sshd
+
+
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: "sshd"
+        state: restarted
+
+
+      

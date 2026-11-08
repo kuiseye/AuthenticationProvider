@@ -3,14 +3,14 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
-# dotenv files
 .env*
-!.env.template
+!**.env.auth
+!**.env.docker
+!**.env.auth.secrets.template
+!**.env.db.template
 
-temp
+**/efbundle
 
-prod/**
-!prod/docker-compose.yml
 
 # User-specific files
 *.rsuser
