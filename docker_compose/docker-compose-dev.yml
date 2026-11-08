@@ -49,7 +49,7 @@ services:
         condition: service_completed_successfully
 ###############################################
   postgres:
-    image: "postgres:17-alpine"
+    image: "docker.io/library/postgres:17-alpine"
     container_name: ${DB_HOST}
     volumes:
       - postgres-volume:/var/lib/postgresql/data
