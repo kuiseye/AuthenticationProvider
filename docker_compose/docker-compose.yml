@@ -3,7 +3,7 @@ name: auth
 services:
   reverse_proxy:
       build:
-        context: .
+        context: ..
         dockerfile: ./docker/Dockerfile.nginx
       ports:
       - "${SERVER_PORT}:${REVERSE_PROXY_PORT}"
@@ -20,7 +20,7 @@ services:
 #####################################################3
   authentication_provider:
     build: 
-      context: .
+      context: ..
       dockerfile: ./docker/Dockerfile.app
     networks:
         authentication_network:
@@ -40,9 +40,9 @@ services:
       - DB_HOST
       - DB_PORT
     env_file:
-      - ./env/.env.db
-      - ./env/.env.auth
-      - ./env/.env.auth.secrets
+      - ../env/.env.db
+      - ../env/.env.auth
+      - ../env/.env.auth.secrets
     depends_on:
       migrator:
         condition: service_completed_successfully
@@ -67,11 +67,11 @@ services:
     environment:
       - PGPORT=${DB_PORT}
     env_file:
-      - ./env/.env.db
+      - ../env/.env.db
 ##################################################
   migrator:
     build: 
-      context: .
+      context: ..
       dockerfile: ./docker/Dockerfile.migrations
     networks:
       - authentication_network
@@ -82,7 +82,7 @@ services:
       - DB_HOST
       - DB_PORT
     env_file:
-      - ./env/.env.db
+      - ../env/.env.db
 
 ##################################################
 
