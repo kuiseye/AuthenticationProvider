@@ -4,7 +4,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./docker_compose/prom.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prom.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     networks:
       - internal_monitoring_network
