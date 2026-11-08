@@ -5,9 +5,10 @@ using AuthenticationProvider.Configuration.ConfigurationOptions;
 using AuthenticationProvider.Configuration.Settings;
 using AuthenticationProvider.Domain.Entities;
 using AuthenticationProvider.Domain.Repositories;
-using AuthenticationProvider.AppInterface.Controllers.Common;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Metrics;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,12 +23,14 @@ builder.Services.AddApplicationOptions(builder.Configuration);
 //Http
 builder.Services.AddControllers();
 //DbContext
-builder.Services.AddApplicationDbContext(builder.Configuration);
+builder.Services.AddApplicationDbContext(builder.Configuration, builder.Environment);
 //Authentication
 builder.Services.AddJwtCookieAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddAppUserClaimsDto();
 builder.Services.AddSingleton<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
+//Other
+builder.Services.AddHealthChecks();
 //Services
 //builder.Services.AddHttpContextAccessor();
 
@@ -39,14 +42,25 @@ builder.Services.AddScoped<IAppUserRepository,AppUserRepository>();
 builder.Services.AddScoped<IAuthenticationService,AuthenticationService>();
 builder.Services.AddScoped<ITokenService,TokenService>();
 
+builder.Services.AddOpenTelemetry()
+.WithMetrics(m=>m.AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddProcessInstrumentation() 
+        .AddProcessInstrumentation().AddPrometheusExporter());
 
 var app = builder.Build();
+
+app.MapHealthChecks("health");
+
+app.MapPrometheusScrapingEndpoint();
 app.UseExceptionHandler();
 //Dev
 if (app.Environment.IsDevelopment())
 {
     app.MapSwaggerEndpoints();
 }
+
 //Auth
 app.UseAuthentication();
 app.UseAuthorization();

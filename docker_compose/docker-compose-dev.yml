@@ -1,0 +1,100 @@
+name: auth-dev
+services:
+  reverse_proxy:
+      build:
+        context: .
+        dockerfile: ./docker/Dockerfile.nginx
+      container_name: ${REVERSE_PROXY_HOST}
+      ports:
+      - "${SERVER_PORT}:${REVERSE_PROXY_PORT}"
+      networks:
+        - authentication_network
+      environment:
+        - RV_HOST=${REVERSE_PROXY_HOST}
+        - RV_PORT=${REVERSE_PROXY_PORT}
+        - AUTH_LOCATION=${AUTH_SCHEME}://${AUTH_HOST}:${AUTH_PORT}
+      depends_on:
+        authentication_provider:
+          condition: service_healthy
+        
+#####################################################3
+  authentication_provider:
+    container_name: ${AUTH_HOST}
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile.app.dev
+    networks:
+        authentication_network:
+          aliases:
+            - ${AUTH_HOST}
+        monitoring_network:
+          aliases:
+              - ${AUTH_HOST}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:${AUTH_PORT}/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    environment:
+      - ASPNETCORE_HTTP_PORTS=${AUTH_PORT}
+      - DB_HOST
+      - DB_PORT
+    env_file:
+      - ./env/.env.db
+      - ./env/.env.auth
+      - ./env/.env.auth.secrets
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+###############################################
+  postgres:
+    image: "postgres:17-alpine"
+    container_name: ${DB_HOST}
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    networks:
+        authentication_network:
+          aliases:
+            - ${DB_HOST}
+        monitoring_network:
+          aliases:
+              - ${DB_HOST}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p ${DB_PORT} -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    environment:
+      - PGPORT=${DB_PORT}
+    env_file:
+      - ./env/.env.db
+##################################################
+  migrator:
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile.migrations
+    networks:
+      - authentication_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST
+      - DB_PORT
+    env_file:
+      - ./env/.env.db
+
+##################################################
+
+volumes:
+  postgres-volume:
+    external: false
+
+networks:
+  authentication_network:
+    driver: bridge
+  monitoring_network:
+    name: monitoring_network
+    driver: bridge

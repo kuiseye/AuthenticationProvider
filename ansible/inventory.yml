@@ -1,0 +1,5 @@
+nodes:
+  hosts:
+    node_01:
+      ansible_host: 169.58.195.84
+      ansible_user: root

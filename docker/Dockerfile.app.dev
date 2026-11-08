@@ -22,6 +22,8 @@ RUN dotnet build ./AuthenticationProviderApp.csproj --no-restore -c Debug -o /bu
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 
 EXPOSE 8080
+RUN apt update && apt-get install -y curl
+
 ENV ASPNETCORE_ENVIRONMENT=Development
 WORKDIR /build
 
