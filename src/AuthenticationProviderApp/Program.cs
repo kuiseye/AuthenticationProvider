@@ -6,7 +6,6 @@ using AuthenticationProvider.Configuration.Settings;
 using AuthenticationProvider.Domain.Entities;
 using AuthenticationProvider.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
 
@@ -23,7 +22,7 @@ builder.Services.AddApplicationOptions(builder.Configuration);
 //Http
 builder.Services.AddControllers();
 //DbContext
-builder.Services.AddApplicationDbContext(builder.Configuration, builder.Environment);
+builder.Services.AddApplicationDbContext(builder.Configuration);
 //Authentication
 builder.Services.AddJwtCookieAuthentication();
 builder.Services.AddAuthorization();
@@ -46,7 +45,6 @@ builder.Services.AddOpenTelemetry()
 .WithMetrics(m=>m.AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
         .AddRuntimeInstrumentation()
-        .AddProcessInstrumentation() 
         .AddProcessInstrumentation().AddPrometheusExporter());
 
 var app = builder.Build();
