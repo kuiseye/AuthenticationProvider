@@ -1,6 +1,11 @@
-**/obj
+*
+!.config/dotnet-tools.json
+!src/
+!rev_proxy/
+!frontend/
+**/node_modules
 **/bin
-**/.vscode
+**/obj
 **/.env
 **/.env.dev
-**/temp
+**/efbundle

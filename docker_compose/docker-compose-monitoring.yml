@@ -1,0 +1,48 @@
+services:
+  prometheus:
+    image: prom/prometheus:v3
+    ports:
+      - 9090:9090
+    volumes:
+      - ./docker_compose/prom.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - internal_monitoring_network
+      - monitoring
+  
+  grafana:
+    image: grafana/grafana
+    ports: 
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - internal_monitoring_network
+  
+  # postgresql-exporter:
+  #       image: prometheuscommunity/postgres-exporter
+  #       container_name: postgresql-exporter
+  #       ports:
+  #           - "9187:9187"
+  #       env_file:
+  #         - ../.env
+  #       environment:
+  #           DATA_SOURCE_NAME: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}?sslmode=disable"
+  #       restart: unless-stopped
+  #       networks:
+  #           - monitoring
+
+
+
+networks:
+  internal_monitoring_network:
+    external: false
+  monitoring:
+    name: monitoring_network
+    external: true
+
+volumes:
+  grafana_data:
+    external: false
+  prometheus_data:
+    external: false

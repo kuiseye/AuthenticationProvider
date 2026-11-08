@@ -1,7 +1,6 @@
-
 server {
-    server_name ${REVERSE_PROXY_HOST};
-    listen ${REVERSE_PROXY_PORT};
+    server_name ${RV_HOST};
+    listen ${RV_PORT};
     access_log ./access_log;
 
     location / {
@@ -11,7 +10,7 @@ server {
     }
 
     location /api {
-        proxy_pass ${API_LOCATION}/api/v1;
+        proxy_pass ${AUTH_LOCATION}/api/v1;
 
         proxy_set_header Host $host;
         proxy_set_header X-REAL-IP $remote_addr;

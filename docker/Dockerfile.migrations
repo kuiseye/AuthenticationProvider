@@ -1,0 +1,23 @@
+FROM  mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+WORKDIR /src
+
+COPY ./.config/dotnet-tools.json /.config/
+COPY ./src/AuthenticationProviderApp/AuthenticationProviderApp.csproj .
+
+RUN dotnet tool restore --tool-manifest /.config/dotnet-tools.json
+RUN dotnet restore AuthenticationProviderApp.csproj
+
+COPY ./src/AuthenticationProviderApp/ .
+
+RUN dotnet ef migrations bundle \
+        --self-contained -r linux-x64 \
+        --force \
+        -o ./efbundle 
+
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0 AS migrate
+
+WORKDIR /migrate
+COPY --from=build /src/efbundle .
+
+ENTRYPOINT ["/bin/sh", "-c", "exec ./efbundle --connection \"Host=$DB_HOST;Port=$DB_PORT;Database=$POSTGRES_DB;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD\""]
