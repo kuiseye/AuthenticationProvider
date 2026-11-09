@@ -4,12 +4,12 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./prom.yml:/etc/prometheus/prometheus.yml:ro
+      - ../monitoring/prom.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     networks:
       - internal_monitoring_network
-      - monitoring
-  
+      - monitoring_network
+#######################################################################################
   grafana:
     image: grafana/grafana
     ports: 
@@ -18,26 +18,26 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - internal_monitoring_network
-  
-  # postgresql-exporter:
-  #       image: prometheuscommunity/postgres-exporter
-  #       container_name: postgresql-exporter
-  #       ports:
-  #           - "9187:9187"
-  #       env_file:
-  #         - ../.env
-  #       environment:
-  #           DATA_SOURCE_NAME: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}?sslmode=disable"
-  #       restart: unless-stopped
-  #       networks:
-  #           - monitoring
+#######################################################################################
+  postgresql-exporter:
+        image: prometheuscommunity/postgres-exporter
+        container_name: postgresql-exporter
+        ports:
+            - "9187:9187"
+        environment:
+            DATA_SOURCE_URI: ${DB_HOST}:${DB_PORT}/${POSTGRES_DB}?sslmode=disable
+            DATA_SOURCE_USER: ${POSTGRES_USER}
+            DATA_SOURCE_PASS: ${POSTGRES_PASSWORD}
 
-
+        restart: unless-stopped
+        networks:
+            - monitoring_network
+#######################################################################################
 
 networks:
   internal_monitoring_network:
     external: false
-  monitoring:
+  monitoring_network:
     name: monitoring_network
     external: true
 
