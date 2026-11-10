@@ -1,0 +1,14 @@
+FROM docker.io/library/node:26-alpine AS build
+WORKDIR /build
+
+COPY ./frontend/package.json ./frontend/package-lock.json ./
+RUN npm ci
+
+COPY ./frontend/ ./
+RUN npm run build -- --outDir /app
+
+FROM docker.io/library/nginx:1.31.8-alpine
+
+COPY --from=build /app /var/www/frontend
+
+COPY ./rev_proxy/nginx.conf.template.dev /etc/nginx/templates/nginx.conf.template

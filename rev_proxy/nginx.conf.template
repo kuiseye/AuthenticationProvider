@@ -1,6 +1,6 @@
 server {
-    server_name pavloshevchyk.site;
-    listen 80;
+    server_name www.${RV_HOST} ${RV_HOST};
+    listen ${RV_PORT};
     access_log ./access_log;
 
     
@@ -13,11 +13,14 @@ server {
     }
 }
 server{
-    server_name pavloshevchyk.site;
+    server_name www.${RV_HOST} ${RV_HOST};
     listen 443 ssl;
+    listen 443 quic reuseport;
 
-    ssl_certificate /etc/letsencrypt/live/pavloshevchyk.site/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/pavloshevchyk.site/privkey.pem;
+    http2 on;
+
+    ssl_certificate /etc/letsencrypt/live/${RV_HOST}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${RV_HOST}/privkey.pem;
     ssl_protocols       TLSv1.2 TLSv1.3;
 
     add_header Strict-Transport-Security "max-age=31536000" always;

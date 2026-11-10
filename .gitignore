@@ -8,7 +8,8 @@
 !**.env.docker
 !**.env.auth.secrets.template
 !**.env.db.template
-
+!.env.server.template
+!.env.server.dev
 **/efbundle
 
 

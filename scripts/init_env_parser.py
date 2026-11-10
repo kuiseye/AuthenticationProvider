@@ -19,4 +19,7 @@ verificationKeyGroup = parser.add_mutually_exclusive_group(required=True)
 verificationKeyGroup.add_argument('-v', '--verification-key', help="raw signing key")  
 verificationKeyGroup.add_argument('--verification-key-file', help="file containing verification key")  
 
+parser.add_argument('-H', '--host', help="domain name of the application", required=True)  
+parser.add_argument('-P','--port', help="port to expose on the host", required=True)  
+
 args = parser.parse_args()

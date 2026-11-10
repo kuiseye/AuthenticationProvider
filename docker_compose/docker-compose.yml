@@ -6,7 +6,7 @@ services:
         context: ..
         dockerfile: ./docker/Dockerfile.nginx
       ports:
-      - "80:80"
+      - "${SERVER_PORT}:${REVERSE_PROXY_PORT}"
       - "443:443"
       annotations:
         run.oci.keep_original_groups: "1"
@@ -16,8 +16,8 @@ services:
       networks:
         - authentication_network
       environment:
-        - RV_HOST=${REVERSE_PROXY_HOST}
         - RV_PORT=${REVERSE_PROXY_PORT}
+        - RV_HOST=${SERVER_HOST}
         - AUTH_LOCATION=${AUTH_SCHEME}://${AUTH_HOST}:${AUTH_PORT}
       depends_on:
         authentication_provider:
