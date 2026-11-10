@@ -31,9 +31,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:${AUTH_PORT}/health"]
       interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
+      timeout: 1s
+      retries: 20
+      start_period: 0s
     environment:
       - ASPNETCORE_HTTP_PORTS=${AUTH_PORT}
       - DB_HOST
@@ -60,9 +60,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p ${DB_PORT} -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
+      timeout: 1s
+      retries: 20
+      start_period: 0s
     environment:
       - PGPORT=${DB_PORT}
     env_file:
