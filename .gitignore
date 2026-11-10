@@ -12,6 +12,10 @@
 **/efbundle
 
 
+certbot/
+letsencrypt/
+
+
 # User-specific files
 *.rsuser
 *.suo

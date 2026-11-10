@@ -1,7 +1,26 @@
 server {
-    server_name ${RV_HOST};
-    listen ${RV_PORT};
+    server_name pavloshevchyk.site;
+    listen 80;
     access_log ./access_log;
+
+    
+    location /.well-known/acme-challenge/ {
+	root /letsencrypt/;
+    }
+    
+    location / {
+	return 301 https://$host;	
+    }
+}
+server{
+    server_name pavloshevchyk.site;
+    listen 443 ssl;
+
+    ssl_certificate /etc/letsencrypt/live/pavloshevchyk.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/pavloshevchyk.site/privkey.pem;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+
+    add_header Strict-Transport-Security "max-age=31536000" always;
 
     location / {
         root /var/www/frontend/;
