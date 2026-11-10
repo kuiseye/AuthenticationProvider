@@ -3,6 +3,7 @@ name: DotNet CI
 on: 
     push: 
         branches: 
+            - feature/**
             - develop
             - main
     pull_request: 

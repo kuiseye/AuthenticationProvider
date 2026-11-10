@@ -1,7 +1,29 @@
 server {
-    server_name ${RV_HOST};
+    server_name www.${RV_HOST} ${RV_HOST};
     listen ${RV_PORT};
     access_log ./access_log;
+
+    
+    location /.well-known/acme-challenge/ {
+	root /letsencrypt/;
+    }
+    
+    location / {
+	return 301 https://$host;	
+    }
+}
+server{
+    server_name www.${RV_HOST} ${RV_HOST};
+    listen 443 ssl;
+    listen 443 quic reuseport;
+
+    http2 on;
+
+    ssl_certificate /etc/letsencrypt/live/${RV_HOST}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${RV_HOST}/privkey.pem;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+
+    add_header Strict-Transport-Security "max-age=31536000" always;
 
     location / {
         root /var/www/frontend/;

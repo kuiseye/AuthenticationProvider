@@ -6,12 +6,22 @@ import sys
 
 RELATIVE_DB_ENV_FILE_PATH=".env.db"
 RELATIVE_AUTH_SECRETS_ENV_FILE_PATH=".env.auth.secrets"
+RELATIVE_SERVER_ENV_FILE_PATH=".env.server"
 TEMLATE_ENDING=".template"
 ####################################################################33
 DB_USER_ENV_NAME="POSTGRES_USER"
 DB_PASSWOR_ENV_NAME="POSTGRES_PASSWORD"
+
 SIGNING_KEY_ENV_NAME="TokenKeyPairSettings__SigningKey"
 VERIFICATION_KEY_ENV_NAME="TokenKeyPairSettings__VerificationKey"
+
+SERVER_HOST_NAME="SERVER_HOST"
+SERVER_PORT_NAME="SERVER_PORT"
+
+def assertFileExists(path: str) -> bool:
+    if os.path.exists(path) and not args.force:
+        print(f"{path} already exists (use --force to overwrite)", file=sys.stderr)
+        exit(1)
 
 def loadKeyFromFile(path : str) -> str:
     fd = os.open(path, os.O_RDONLY)
@@ -29,15 +39,11 @@ folder = args.env_folder
 
 db_file_path = folder + RELATIVE_DB_ENV_FILE_PATH
 auth_file_path = folder + RELATIVE_AUTH_SECRETS_ENV_FILE_PATH
-if os.path.exists(db_file_path) and not args.force:
-    print(f"{db_file_path} already exists (use --force to overwrite)", file=sys.stderr)
-    exit(1)
+server_file_path = folder + RELATIVE_SERVER_ENV_FILE_PATH
 
-if os.path.exists(auth_file_path) and not args.force:
-    print(f"{auth_file_path} already exists (use --force to overwrite)", file=sys.stderr)
-    exit(1)
-
-
+assertFileExists(db_file_path)
+assertFileExists(auth_file_path)
+assertFileExists(server_file_path)
 
 dbUser = args.db_user
 dbPassword = args.db_password
@@ -57,6 +63,16 @@ auth_values[SIGNING_KEY_ENV_NAME]=signingKey
 auth_values[VERIFICATION_KEY_ENV_NAME]=verificationKey
 
 ################################################################################
+host = args.host
+port = args.port
+
+server_values = dotenv_values(server_file_path + TEMLATE_ENDING, interpolate=False)
+
+server_values[SERVER_HOST_NAME]=host
+server_values[SERVER_PORT_NAME]=port
+
+################################################################################
 
 writeEnvsToFile(db_file_path,db_values)
 writeEnvsToFile(auth_file_path, auth_values)
+writeEnvsToFile(server_file_path, server_values)
