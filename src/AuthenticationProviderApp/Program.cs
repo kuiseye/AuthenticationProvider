@@ -31,7 +31,6 @@ builder.Services.AddSingleton<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>
 //Other
 builder.Services.AddHealthChecks();
 //Services
-//builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton(TimeProvider.System);  
 builder.Services.AddScoped<IRequestClock, RequestClock>();
