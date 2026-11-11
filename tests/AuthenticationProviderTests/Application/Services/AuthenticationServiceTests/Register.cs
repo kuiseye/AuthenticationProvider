@@ -10,9 +10,9 @@ namespace AuthenticationProvider.Tests.Application.Services.AuthenticationServic
 public class Register : AuthenticationService_Common
 {
     [Theory]
-    [InlineData("Oleg", "oleg@gmail.com", "hisPassword", "hisPassword")]
-    [InlineData("Pavlo", "pavlo@gmail.com", "myPassword", "myPassword")]
-    [InlineData("Communism", "communism@gmail.com", "ourPassword", "ourPassword")]
+    [InlineData("Oleg", "oleg@gmail.com", "hisPassword123", "hisPassword123")]
+    [InlineData("Pavlo", "pavlo@gmail.com", "myPassword123", "myPassword123")]
+    [InlineData("Communism", "communism@gmail.com", "ourPassword123", "ourPassword123")]
     public async Task WhenCorrectCredentials_ShouldReturnSuccessAndSave
         (string username, string email, string password, string verifyPassword)
     {
@@ -29,7 +29,7 @@ public class Register : AuthenticationService_Common
     }
 
     [Theory]
-    [InlineData("Oleg", "oleg@gmail.com", "hisPassword", "myPassword")]
+    [InlineData("Oleg", "oleg@gmail.com", "hisPassword123", "myPassword123")]
     public async Task WhenWrongVerifyPasswordValue_ShouldReturnInvalidInputError
         (string username, string email, string password, string verifyPassword)
     {
@@ -44,9 +44,9 @@ public class Register : AuthenticationService_Common
     }
 
     [Theory]
-    [InlineData("Oleg", "oleg@gmail.com", "hisPassword", "hisPassword")]
-    [InlineData("Pavlo", "pavlo@gmail.com", "myPassword", "myPassword")]
-    [InlineData("Communism", "communism@gmail.com", "ourPassword", "ourPassword")]
+    [InlineData("Oleg", "oleg@gmail.com", "hisPassword123", "hisPassword123")]
+    [InlineData("Pavlo", "pavlo@gmail.com", "myPassword123", "myPassword123")]
+    [InlineData("Communism", "communism@gmail.com", "ourPassword123", "ourPassword123")]
     public async Task WhenEmailTaken_ShouldReturnValidationErrorOfEmailField
         (string username, string email, string password, string verifyPassword)
     {
@@ -62,9 +62,9 @@ public class Register : AuthenticationService_Common
     }
 
     [Theory]
-    [InlineData("Oleg", "oleg@gmail.com", "hisPassword", "hisPassword")]
-    [InlineData("Pavlo", "pavlo@gmail.com", "myPassword", "myPassword")]
-    [InlineData("Communism", "communism@gmail.com", "ourPassword", "ourPassword")]
+    [InlineData("Oleg", "oleg@gmail.com", "hisPassword123", "hisPassword123")]
+    [InlineData("Pavlo", "pavlo@gmail.com", "myPassword123", "myPassword123")]
+    [InlineData("Communism", "communism@gmail.com", "ourPassword123", "ourPassword123")]
     public async Task WhenEmailTaken_ShouldReturnValidationErrorOfUsernameField
         (string username, string email, string password, string verifyPassword)
     {

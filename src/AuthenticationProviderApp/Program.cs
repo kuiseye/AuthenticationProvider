@@ -1,10 +1,12 @@
 using AuthenticationProvider;
 using AuthenticationProvider.Application.Services;
+using AuthenticationProvider.Application.Validators;
 using AuthenticationProvider.Configuration;
 using AuthenticationProvider.Configuration.ConfigurationOptions;
 using AuthenticationProvider.Configuration.Settings;
 using AuthenticationProvider.Domain.Entities;
 using AuthenticationProvider.Domain.Repositories;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
@@ -39,6 +41,8 @@ builder.Services.AddScoped<ICookieManager, CookieManager>();
 builder.Services.AddScoped<IAppUserRepository,AppUserRepository>();
 builder.Services.AddScoped<IAuthenticationService,AuthenticationService>();
 builder.Services.AddScoped<ITokenService,TokenService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<LoginAppUserFormValidator>();
 
 builder.Services.AddOpenTelemetry()
 .WithMetrics(m=>m.AddAspNetCoreInstrumentation()

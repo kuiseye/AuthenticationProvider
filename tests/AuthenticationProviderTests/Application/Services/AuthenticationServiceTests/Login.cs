@@ -11,9 +11,9 @@ namespace AuthenticationProvider.Tests.Unit.Application.Services.AuthenticationS
 public class Login : AuthenticationService_Common
 {
     [Theory]
-    [InlineData("Oleg", "hisPassword")]
-    [InlineData("Pavlo","myPassword")]
-    [InlineData("Communism", "ourPassword")]
+    [InlineData("Oleg", "hisPassword123")]
+    [InlineData("Pavlo","myPassword123")]
+    [InlineData("Communism", "ourPassword123")]
     public async Task WhenCorrectCredentials_ShouldReturnSuccess
         (string username, string password)
     {
@@ -29,9 +29,9 @@ public class Login : AuthenticationService_Common
     }
 
     [Theory]
-    [InlineData("Oleg", "hisPassword")]
-    [InlineData("Pavlo","myPassword")]
-    [InlineData("Communism", "ourPassword")]
+    [InlineData("Oleg", "hisPassword123")]
+    [InlineData("Pavlo","myPassword123")]
+    [InlineData("Communism", "ourPassword123")]
     public async Task UserNotFound_ShouldReturnFailureWithUnauthorizedError
         (string username, string password)
     {
@@ -46,9 +46,9 @@ public class Login : AuthenticationService_Common
     }
 
     [Theory]
-    [InlineData("Oleg", "hisPassword")]
-    [InlineData("Pavlo","myPassword")]
-    [InlineData("Communism", "ourPassword")]
+    [InlineData("Oleg", "hisPassword123")]
+    [InlineData("Pavlo","myPassword123")]
+    [InlineData("Communism", "ourPassword123")]
     public async Task PasswordDoesNotmatch_ShouldReturnFailureWithUnauthorizedError
         (string username, string password)
     {
