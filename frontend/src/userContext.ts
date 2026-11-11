@@ -1,8 +1,9 @@
 import { readonly, ref } from "vue";
 import { me } from "./authService";
+import type { User } from "./types/User";
 
 
-let globalUser = ref<{username : string} | null | undefined>(undefined)
+let globalUser = ref<User | null | undefined>(undefined)
 
 me()
 .then(user => globalUser.value = user)
@@ -10,4 +11,4 @@ me()
 
 export default {
     user: readonly(globalUser), 
-    setUser: (user:{username: string}|null) => globalUser.value = user}
+    setUser: (user:User|null) => globalUser.value = user}
