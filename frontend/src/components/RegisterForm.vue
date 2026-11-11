@@ -5,6 +5,7 @@ import userContext from '../userContext';
 import type { AxiosError } from 'axios';
 import type { AppError, AppErrorEntry } from '../types/AppError';
 import groupValidationEntriesByField from '../types/AppError';
+import router from '../router';
 
     let {setUser} = userContext
 
@@ -27,7 +28,7 @@ import groupValidationEntriesByField from '../types/AppError';
             return
 
         await register(username.value, email.value, password.value, verifyPassword.value)
-        .then(()=>me().then(user=>setUser(user)))
+        .then(()=>me().then(user=>{setUser(user); router.push('/')}))
         .catch((reason:AxiosError<AppError>)=> {
             if(reason.response == null)
                 return
