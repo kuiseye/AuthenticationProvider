@@ -55,4 +55,12 @@ public class AuthenticationController(IAuthenticationService authenticationServi
             MapErrors
         );
     }
+
+    [HttpPost("logout")]
+    [ProducesResponseType(200)]
+    public async Task<ActionResult> Logout()
+    {
+        cookieManager.RemoveTokenCookie();
+        return Ok();
+    }
 }
