@@ -10,4 +10,4 @@ const routes = [
     {path:"/register",component:RegisterPage}
 ]
 
-export default createRouter({history:createWebHistory(), routes})
+export default createRouter({history:createWebHistory(), routes, linkActiveClass:'is-active'})

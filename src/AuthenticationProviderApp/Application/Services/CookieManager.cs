@@ -26,4 +26,9 @@ public class CookieManager : ICookieManager
             MaxAge = _tokenOptions.Value.Lifetime
         });
     }
+
+    public void RemoveTokenCookie()
+    {
+        _httpContext.Response.Cookies.Delete(_tokenOptions.Value.CookieName);
+    }
 }

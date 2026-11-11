@@ -20,7 +20,7 @@
             "pipeTransport": {
                 "pipeCwd": "${workspaceRoot}",
                 "pipeProgram": "podman",
-                "pipeArgs": [ "exec", "-i", "authentication_provider" ],
+                "pipeArgs": [ "exec", "-i", "auth-dev-authentication_provider-1" ],
                 "debuggerPath": "/vsdbg/vsdbg",
                 "quoteArgs": false
             },

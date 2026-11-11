@@ -10,6 +10,6 @@ scrape_configs:
   - job_name: authentication_provider
     static_configs:
       - targets: ["authentication_provider:8080"]
-  # - job_name: postgresql
-  #   static_configs:
-  #     - targets: ['postgresql-exporter:9187']
+  - job_name: postgresql
+    static_configs:
+      - targets: ['postgresql-exporter:9187']

@@ -1,30 +1,39 @@
 <script setup lang="ts">
+import { logout } from '../authService';
 import userContext from '../userContext';
 
 
-    const { user } = userContext 
+    const { user, setUser } = userContext 
     console.log(user.value)
 
+    function logoutUser(){
+        logout().then(()=>{
+            setUser(null)
+        })
+    }
 </script>
 
 <template>
     <nav>
-        <li class="text-color">
-            <il  class="home-container">
-                <RouterLink to="/"> Home </RouterLink>
-            </il>
+        <ul class="text-color">
+            <li  class="home-container">
+                <RouterLink to="/" active-class="is-active"> Home </RouterLink>
+            </li>
             <div v-if="user == undefined" class="auth-container">
-                <il >
-                    <RouterLink class="text-color" to="/login"> Login </RouterLink>
-                </il>
-                <il>
-                    <RouterLink to="/register"> Register </RouterLink>
-                </il>
+                <li >
+                    <RouterLink class="text-color" to="/login" active-class="is-active"> Login </RouterLink>
+                </li>
+                <li>
+                    <RouterLink to="/register" active-class="is-active"> Register </RouterLink>
+                </li>
             </div>
             <div v-else class="auth-container user-data">
-                {{ user.username }}
+                <span>{{ user.username }}</span>
+                <button @click="logoutUser">
+                    Logout
+                </button>
             </div>
-        </li>
+        </ul>
     </nav>
 </template>
 
@@ -46,11 +55,10 @@ import userContext from '../userContext';
         display: flex;
 
         align-items: center;
-        justify-content: center;
+        justify-content: space-around;
     }
 
-    li{
-        width: 100%;
+    ul{
         height: var(--nav-height);
 
         display: flex;
@@ -63,7 +71,7 @@ import userContext from '../userContext';
         list-style-type: none;
     }
 
-    il{
+    li{
         height: var(--nav-height);
 
         padding: 0px 10px;
@@ -71,7 +79,9 @@ import userContext from '../userContext';
     }
 
     a{
+        display: inline-block;
         width: 100%;
+        padding: 0px 10px;
         height: var(--nav-height);
         line-height: var(--nav-height);
 
@@ -87,8 +97,35 @@ import userContext from '../userContext';
         color: red;
     }
 
+    button{
+        border-width: 0px;
+        width: 100%;
+        height: var(--nav-height);
+        line-height: var(--nav-height);
+        background-color: rgba(0, 0, 0,0);
+        border-color: rgba(0, 0, 0,0);
+
+        color: var(--text-color);
+        text-decoration: none;
+
+        text-align: center;
+
+        transition: ease-in-out 150ms;
+
+        padding: 0px 10px;
+        margin: 0px 10px;
+    }
+
+    button:hover{
+        color: red;
+    }
+
     .user-data{
         height: 100%;
         color:var(--text-color)
+    }
+
+    a.is-active{
+        background-color: rgb(66 184 131 / 14%);
     }
 </style>

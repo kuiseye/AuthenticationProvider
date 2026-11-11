@@ -30,7 +30,7 @@ public class CustomJwtBearerOptions(IOptions<TokenSettings> tokenOptions, IOptio
 
             ValidateLifetime = true,
 
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyPairOptions.Value.VerificationKey))
+            IssuerSigningKey = RsaKeyLoader.LoadRsaVerificationKeyFromEnvVariable(tokenKeyPairOptions.Value.VerificationKey)
         };
         options.Events.OnMessageReceived = context =>
         {
