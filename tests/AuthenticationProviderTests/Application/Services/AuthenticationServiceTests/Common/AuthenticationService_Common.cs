@@ -1,4 +1,5 @@
 using AuthenticationProvider.Application.Services;
+using AuthenticationProvider.Application.Validators;
 using AuthenticationProvider.Domain.Entities;
 using AuthenticationProvider.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -16,5 +17,6 @@ public class AuthenticationService_Common
     protected IAuthenticationService _authenticationService;
 
     public AuthenticationService_Common() 
-        => _authenticationService = new AuthenticationService(_appUserRepository,_passwordHasher,_tokenService, requestClock);
+        => _authenticationService = new AuthenticationService(_appUserRepository,_passwordHasher,_tokenService, requestClock, 
+            new LoginAppUserFormValidator(), new RegisterAppUserFormValidator());
 }
