@@ -15,17 +15,17 @@ import userContext from '../userContext';
 
 <template>
     <nav>
-        <li class="text-color">
-            <il  class="home-container">
-                <RouterLink to="/"> Home </RouterLink>
-            </il>
+        <ul class="text-color">
+            <li  class="home-container">
+                <RouterLink to="/" active-class="is-active"> Home </RouterLink>
+            </li>
             <div v-if="user == undefined" class="auth-container">
-                <il >
-                    <RouterLink class="text-color" to="/login"> Login </RouterLink>
-                </il>
-                <il>
-                    <RouterLink to="/register"> Register </RouterLink>
-                </il>
+                <li >
+                    <RouterLink class="text-color" to="/login" active-class="is-active"> Login </RouterLink>
+                </li>
+                <li>
+                    <RouterLink to="/register" active-class="is-active"> Register </RouterLink>
+                </li>
             </div>
             <div v-else class="auth-container user-data">
                 <span>{{ user.username }}</span>
@@ -33,7 +33,7 @@ import userContext from '../userContext';
                     Logout
                 </button>
             </div>
-        </li>
+        </ul>
     </nav>
 </template>
 
@@ -58,8 +58,7 @@ import userContext from '../userContext';
         justify-content: space-around;
     }
 
-    li{
-        width: 100%;
+    ul{
         height: var(--nav-height);
 
         display: flex;
@@ -72,7 +71,7 @@ import userContext from '../userContext';
         list-style-type: none;
     }
 
-    il{
+    li{
         height: var(--nav-height);
 
         padding: 0px 10px;
@@ -80,7 +79,9 @@ import userContext from '../userContext';
     }
 
     a{
+        display: inline-block;
         width: 100%;
+        padding: 0px 10px;
         height: var(--nav-height);
         line-height: var(--nav-height);
 
@@ -97,6 +98,7 @@ import userContext from '../userContext';
     }
 
     button{
+        border-width: 0px;
         width: 100%;
         height: var(--nav-height);
         line-height: var(--nav-height);
@@ -121,5 +123,9 @@ import userContext from '../userContext';
     .user-data{
         height: 100%;
         color:var(--text-color)
+    }
+
+    a.is-active{
+        background-color: rgb(66 184 131 / 14%);
     }
 </style>

@@ -4,6 +4,7 @@ import { login, me } from '../authService';
 import userContext from '../userContext';
 import groupValidationEntriesByField, { type AppError, type AppErrorEntry } from '../types/AppError';
 import type { AxiosError } from 'axios';
+import router from '../router';
 
     let {setUser} = userContext
 
@@ -24,7 +25,7 @@ import type { AxiosError } from 'axios';
             return
 
         await login(username.value, password.value)
-        .then(()=>me().then(user=>setUser(user)))
+        .then(()=>me().then(user=>{setUser(user); router.push('/')}))
         .catch((reason:AxiosError<AppError>)=> {
             if(reason.response == null)
                 return

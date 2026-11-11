@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import Navigation from './components/Navigation.vue';
+import userContext from './userContext.ts';
 import './variables.css'
+
+let {user} = userContext
 </script>
 
 
 
 <template>
-  <Navigation/>
-  <hr/>
-  <main>
-    <RouterView/>
-  </main>
+  <div v-show="user !== undefined">
+      <Navigation/>
+    <hr/>
+    <main>
+        <RouterView/>
+    </main>
+  </div>
 </template>
 
 <style lang="css"  scoped>

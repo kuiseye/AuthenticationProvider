@@ -7,7 +7,7 @@ let globalUser = ref<User | null | undefined>(undefined)
 
 me()
 .then(user => globalUser.value = user)
-.catch(reason => {console.log(reason); globalUser.value == null})
+.catch(() => globalUser.value = null)
 
 export default {
     user: readonly(globalUser), 
