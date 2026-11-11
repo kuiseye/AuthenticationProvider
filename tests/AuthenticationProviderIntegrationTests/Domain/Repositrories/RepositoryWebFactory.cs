@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using AuthenticationProvider.Domain;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -24,8 +26,11 @@ public class RepositoryWebFactory : WebApplicationFactory<Program>, IAsyncLifeti
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseSetting("TokenKeyPairSettings:SigningKey", "test-signing-key");
-        builder.UseSetting("TokenKeyPairSettings:VerificationKey", "test-verification-key");
+        using var rsa = RSA.Create(2048);
+
+        builder.UseSetting("TokenKeyPairSettings:SigningKey", Convert.ToBase64String(Encoding.UTF8.GetBytes(rsa.ExportPkcs8PrivateKeyPem())));
+        builder.UseSetting("TokenKeyPairSettings:VerificationKey", Convert.ToBase64String(Encoding.UTF8.GetBytes(rsa.ExportSubjectPublicKeyInfoPem())));
+        
         builder.UseContentRoot(AppContext.BaseDirectory);
         builder.ConfigureTestServices(services =>
         {
