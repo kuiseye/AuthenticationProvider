@@ -14,8 +14,6 @@ public class TokenService(SigningCredentials signingCredentials, IOptions<TokenS
 {
     public AccessTokenDto GenerateToken(Guid id, string username, AppUserRole role)
     {
-        Console.WriteLine("Sus " + requestClock.UtcNow);
-
         var claims = new List<Claim>()
         {
             new Claim(ApplicationClaimTypes.Id, id.ToString()),

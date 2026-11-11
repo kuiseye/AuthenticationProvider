@@ -32,7 +32,7 @@ public static class DependencyInjection
         {
             var tokenKeyPairOptions = sp.GetRequiredService<IOptions<TokenKeyPairSettings>>();
 
-            return new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyPairOptions.Value.SigningKey)),SecurityAlgorithms.HmacSha256);
+            return new SigningCredentials(RsaKeyLoader.LoadRsaSigningKeyFromEnvVariable(tokenKeyPairOptions.Value.SigningKey),SecurityAlgorithms.RsaSha256);
         });
         
         services.ConfigureOptions<CustomJwtBearerOptions>();
