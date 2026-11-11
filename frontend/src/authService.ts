@@ -11,3 +11,7 @@ export function login(username: string, password: string) : Promise<void>{
 export function register(username: string, email: string, password: string, verifyPassword: string) : Promise<void>{
     return globalAxios.post('register',{username:username, email: email, password:password, verifyPassword: verifyPassword})
 }
+
+export function logout() : Promise<void>{
+    return globalAxios.post('logout')
+}

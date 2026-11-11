@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { logout } from '../authService';
 import userContext from '../userContext';
 
 
-    const { user } = userContext 
+    const { user, setUser } = userContext 
     console.log(user.value)
 
+    function logoutUser(){
+        logout().then(()=>{
+            setUser(null)
+        })
+    }
 </script>
 
 <template>
@@ -22,7 +28,10 @@ import userContext from '../userContext';
                 </il>
             </div>
             <div v-else class="auth-container user-data">
-                {{ user.username }}
+                <span>{{ user.username }}</span>
+                <button @click="logoutUser">
+                    Logout
+                </button>
             </div>
         </li>
     </nav>
@@ -46,7 +55,7 @@ import userContext from '../userContext';
         display: flex;
 
         align-items: center;
-        justify-content: center;
+        justify-content: space-around;
     }
 
     li{
@@ -84,6 +93,28 @@ import userContext from '../userContext';
     }
 
     a:hover{
+        color: red;
+    }
+
+    button{
+        width: 100%;
+        height: var(--nav-height);
+        line-height: var(--nav-height);
+        background-color: rgba(0, 0, 0,0);
+        border-color: rgba(0, 0, 0,0);
+
+        color: var(--text-color);
+        text-decoration: none;
+
+        text-align: center;
+
+        transition: ease-in-out 150ms;
+
+        padding: 0px 10px;
+        margin: 0px 10px;
+    }
+
+    button:hover{
         color: red;
     }
 
